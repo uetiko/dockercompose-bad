@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+    database:
+        image: mariadb:5.5
+        container_name: mysql
+        hostname: mysql
+        restart: always
+        environment:
+             MYSQL_ROOT_PASSWORD: tHezUfru#7E=e2Ud#
+             MYSQL_DATABASE: services
+             MYSQL_USER: service
+             MYSQL_PASSWORD: PASSWD
+        ports:
+            - 3306:3306
+        volumes:
+            - ./databases/storage/mysql:/var/lib/mysql
+
+    source:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: "${HOST_NAME}"
+        hostname: "${HOST_NAME}"
+        restart: always
+        user: ":${HOST_GROUP_ID}"
+        environment:
+            ACCOUNT: "${HOST_NAME}"
+            DOCKER_USER: www-data
+            DOCKER_GROUP: www-data
+            DATE_TIMEZONE: America/Mexico_City
+            REQUEST_TIMEOUT: 60
+            MAX_INPUT_TIME: 60
+            MEMORY_LIMIT: 128M
+            POST_MAX_SIZE: 30M
+            HOST_USER_ID: ${HOST_USER_ID}
+            HOST_GROUP_ID: ${HOST_GROUP_ID}
+            HOST_NAME: ${HOST_NAME}
+        depends_on:
+            - database
+        ports:
+            - 8080:80
+            - 443:443
+        volumes:
+            - ~/opt/source/pagoFacil/api:/var/www/api:rw
+            - ~/opt/source/pagoFacil/api:/var/www/manager:rw
+            - ./scripts/:/root
+            - ./shared/server/ssl:/etc/ssl/certs/local/
