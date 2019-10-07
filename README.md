@@ -26,7 +26,7 @@ Compose is a tool for defining and running multi-container Docker applications. 
 # Use this project
 
 For build or run all containde services, write this command in your terminal
-````sh
+```sh
 ./run.sh <global_domain_name>
 ```
 
@@ -36,16 +36,17 @@ the virtualhost files config of apache, if you need.
 
  once you execute the run script, need enter the container source service, if you don't know the container name, in the command line put:
   docker ps
-  Te container name show in the column names, remember that the container name is the global_domain_name
+  Te container name show in the column names, remember that the container name is the `global_domain_name`
 
   for enter into the container, put in the command line:
-
+```sh
   docker exec -it <container name> /bin/zsh
+```
 
   In this cotainer, should culd run more that one project. For create a new subdomain, use the script osx-create-site.sh
-  ´´´sh
+```sh
   /root/osx-create-site.sh <subdomain name>
-  ´´´
+```
   This script will create a auto signed certificate openssl and enabled the virtual host for 80 and 443 port.
 
 
