@@ -22,7 +22,8 @@ RUN docker-php-ext-install -j$(nproc) \
             bcmath \
             soap \
             dom \
-            xsl
+            xsl \
+            iconv
 
 RUN a2enmod rewrite
 
