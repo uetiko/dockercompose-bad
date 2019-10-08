@@ -2,9 +2,9 @@ version: "3"
 
 services:
     database:
-        image: mariadb:5.5
-        container_name: mysql
-        hostname: mysql
+        image: mysql:5.5
+        container_name: mysqldb
+        hostname: mysqldb
         restart: always
         environment:
              MYSQL_ROOT_PASSWORD: tHezUfru#7E=e2Ud#
@@ -14,7 +14,7 @@ services:
         ports:
             - 3306:3306
         volumes:
-            - ./databases/storage/mysql:/var/lib/mysql
+            - ./databases/storage/mysqldb:/var/lib/mysql
 
     source:
         build:
