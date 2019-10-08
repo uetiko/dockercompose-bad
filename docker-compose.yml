@@ -44,5 +44,8 @@ services:
         volumes:
             - ~/opt/source/pagoFacil/api:/var/www/api:rw
             - ~/opt/source/pagoFacil/api:/var/www/manager:rw
+            - ~/opt/source/pagoFacil/backoffice:/var/www/backoffice:rw
             - ./scripts/:/root
             - ./shared/server/ssl:/etc/ssl/certs/local/
+            - ./etc/infrastructure/apache/sites-available:/etc/apache2/sites-available:rw
+            - ./shared/server/apache/sites-enabled:/etc/apache2/sites-enabled:rw
