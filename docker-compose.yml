@@ -45,7 +45,7 @@ services:
             - database
         ports:
             - 8080:80
-            - 443:443
+            - 4433:443
         volumes:
             - /opt/source/pagoFacil/api:/var/www/api:rw
             - /opt/source/pagoFacil/api:/var/www/manager:rw
@@ -78,8 +78,8 @@ services:
         depends_on:
             - database
         ports:
-            - 8081:80
-            - 8082:443
+            - 80:80
+            - 443:443
         volumes:
             - /opt/source/pagoFacil/magento:/var/www/magento:rw
             - ./scripts/:/root
