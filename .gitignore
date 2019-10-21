@@ -5,3 +5,4 @@ shared/server/log/*
 shared/web/
 databases/*
 scripts/.*
+.idea/
