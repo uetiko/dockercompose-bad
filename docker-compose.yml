@@ -2,9 +2,9 @@ version: "3"
 
 services:
     database:
-        image: mariadb:5.5
-        container_name: mysql
-        hostname: mysql
+        image: mysql:5.6
+        container_name: mysqldb
+        hostname: mysqldb
         restart: always
         environment:
              MYSQL_ROOT_PASSWORD: tHezUfru#7E=e2Ud#
@@ -14,7 +14,12 @@ services:
         ports:
             - 3306:3306
         volumes:
-            - ./databases/storage/mysql:/var/lib/mysql
+            - ./databases/storage/mysqldb:/var/lib/mysql
+
+    redis:
+        image: redis
+        container_name: cache
+        hostname: cache.${HOST_NAME}
 
     source:
         build:
@@ -40,9 +45,44 @@ services:
             - database
         ports:
             - 8080:80
-            - 443:443
+            - 4433:443
         volumes:
-            - ~/opt/source/pagoFacil/api:/var/www/api:rw
-            - ~/opt/source/pagoFacil/api:/var/www/manager:rw
+            - /opt/source/pagoFacil/api:/var/www/api:rw
+            - /opt/source/pagoFacil/api:/var/www/manager:rw
+            - /opt/source/pagoFacil/backoffice:/var/www/backoffice:rw
             - ./scripts/:/root
             - ./shared/server/ssl:/etc/ssl/certs/local/
+            - ./etc/infrastructure/apache/sites-available:/etc/apache2/sites-available:rw
+            - ./shared/server/apache/sites-enabled:/etc/apache2/sites-enabled:rw
+
+    magento:
+        build:
+            context: .
+            dockerfile: dockerfiles/Dockerfile
+        container_name: "magento.${HOST_NAME}"
+        hostname: "magento.${HOST_NAME}"
+        user: ":${HOST_GROUP_ID}"
+        restart: always
+        environment:
+            ACCOUNT: "${HOST_NAME}"
+            DOCKER_USER: www-data
+            DOCKER_GROUP: www-data
+            DATE_TIMEZONE: America/Mexico_City
+            REQUEST_TIMEOUT: 60
+            MAX_INPUT_TIME: 60
+            MEMORY_LIMIT: 128M
+            POST_MAX_SIZE: 30M
+            HOST_USER_ID: ${HOST_USER_ID}
+            HOST_GROUP_ID: ${HOST_GROUP_ID}
+            HOST_NAME: ${HOST_NAME}
+        depends_on:
+            - database
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - /opt/source/pagoFacil/magento:/var/www/magento:rw
+            - ./scripts/:/root
+            - ./shared/server/ssl:/etc/ssl/certs/local/
+            - ./etc/infrastructure/apache/sites-available:/etc/apache2/sites-available:rw
+            - ./shared/server/apache/magento/sites-enabled:/etc/apache2/sites-enabled:rw
