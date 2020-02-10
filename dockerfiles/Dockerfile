@@ -39,6 +39,9 @@ RUN apt-get install -y \
   	&& echo "extension=oauth.so" > /usr/local/etc/php/conf.d/docker-php-ext-oauth.ini \
 	&& apt-get clean
 
+RUN yes | pecl install xdebug && \
+        echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" >> /usr/local/etc/php/conf.d/xdebug.ini
+
 RUN docker-php-ext-configure \
   	gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/; \
   	docker-php-ext-install \
@@ -61,7 +64,7 @@ RUN a2enmod rewrite \
 	&& a2enmod headers \
 	&& a2enmod ssl
 
-ENV XDEBUG_PORT 9000
+ENV XDEBUG_PORT 9001
 
 ADD ./etc/infrastructure/php/ /usr/local/etc/php/
 

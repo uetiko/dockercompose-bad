@@ -21,12 +21,12 @@ services:
         container_name: cache
         hostname: cache.${HOST_NAME}
 
-    source:
+    older:
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: "${HOST_NAME}"
-        hostname: "${HOST_NAME}"
+        container_name: "older.${HOST_NAME}"
+        hostname: "older.${HOST_NAME}"
         restart: always
         user: ":${HOST_GROUP_ID}"
         environment:
@@ -40,7 +40,7 @@ services:
             POST_MAX_SIZE: 30M
             HOST_USER_ID: ${HOST_USER_ID}
             HOST_GROUP_ID: ${HOST_GROUP_ID}
-            HOST_NAME: ${HOST_NAME}
+            HOST_NAME: "older.${HOST_NAME}"
         depends_on:
             - database
         ports:
@@ -74,14 +74,19 @@ services:
             POST_MAX_SIZE: 30M
             HOST_USER_ID: ${HOST_USER_ID}
             HOST_GROUP_ID: ${HOST_GROUP_ID}
-            HOST_NAME: ${HOST_NAME}
+            HOST_NAME: "${HOST_NAME}"
         depends_on:
             - database
         ports:
             - 80:80
             - 443:443
+            - 9001:9001
         volumes:
             - /opt/source/pagoFacil/magento:/var/www/magento:rw
+            - /opt/source/pagoFacil/Domain-php:/var/www/domain-php:rw
+            - /opt/source/pagoFacil/integracion-pagofacil:/var/www/integracion-pagofacil:rw
+            - /opt/source/pagoFacil/sdk-pagofacil-php:/var/www/sdk-php-pagofacil:rw
+            - /opt/source/pagoFacil/WooComercePlugin:/var/www/woocommerce/
             - ./scripts/:/root
             - ./shared/server/ssl:/etc/ssl/certs/local/
             - ./etc/infrastructure/apache/sites-available:/etc/apache2/sites-available:rw
